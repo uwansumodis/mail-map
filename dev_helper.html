@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Map Coordinate Helper</title>
+  <style>
+    body{font-family:Arial;margin:12px;}
+    #imgWrap{max-width:1100px;border:1px solid #ccc;}
+    img{width:100%;height:auto;display:block;cursor:crosshair;}
+    #out{margin-top:12px;white-space:pre-wrap;background:#f6f6f6;padding:8px;border-radius:6px;}
+    button{margin-top:8px;padding:8px 10px;}
+  </style>
+</head>
+<body>
+  <h2>Map Coordinate Helper</h2>
+  <p>Upload your map to `maps/` and open this page (via GitHub Pages or Live Server). Click anywhere on the map to get percent coordinates. The output is copied to clipboard automatically.</p>
+
+  <div id="imgWrap">
+    <img id="theMap" src="maps/johto.png" alt="map"/>
+  </div>
+
+  <div id="out">Click on the map to get coordinates...</div>
+  <button id="clear">Clear Output</button>
+
+  <script>
+    const img = document.getElementById('theMap');
+    const out = document.getElementById('out');
+    img.addEventListener('click', function(e){
+      const rect = img.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const px = (x / rect.width) * 100;
+      const py = (y / rect.height) * 100;
+      const text = `xPercent: ${px.toFixed(2)}, yPercent: ${py.toFixed(2)}\n\n` +
+                   `JSON snippet:\n{\n  "id": "your_id_here",\n  "name": "City Name - Post Shop",\n  "xPercent": ${px.toFixed(2)},\n  "yPercent": ${py.toFixed(2)},\n  "mailSprite": "assets/mail-sprites/flower_mail.png",\n  "details": { "price": "300 Poké$", "desc": "<ul><li>Flower Mail</li></ul>", "shopImage": "assets/shop-screens/johto/your_shop.png" }\n}\n`;
+      out.textContent = text;
+      navigator.clipboard?.writeText(text).catch(()=>{});
+    });
+    document.getElementById('clear').addEventListener('click', ()=> out.textContent = '');
+  </script>
+</body>
+</html>
